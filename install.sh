@@ -25,14 +25,14 @@ check_root() {
 }
 
 install_script() {
-  echo -e "${YELLOW}⬇ Downloading script...${NC}"
+  echo -e "${YELLOW}⬇ Downloading script from GitHub...${NC}"
   curl -Ls $RAW_URL -o $INSTALL_PATH
   chmod +x $INSTALL_PATH
-  echo -e "${GREEN}✅ Installed at $INSTALL_PATH${NC}"
+  echo -e "${GREEN}✅ Installed RAINOVPN at $INSTALL_PATH${NC}"
 }
 
 install_systemd() {
-  echo -e "${YELLOW}Do you want to enable autostart at boot? (y/n):${NC}"
+  echo -e "${YELLOW}⚙ Do you want to enable autostart at boot? (y/n):${NC}"
   read -r answer
   if [[ "$answer" =~ ^[Yy]$ ]]; then
     cat > $SERVICE_FILE <<EOF
@@ -48,19 +48,21 @@ RemainAfterExit=true
 [Install]
 WantedBy=multi-user.target
 EOF
+
     systemctl daemon-reexec
-    systemctl enable RAINOVPN-tunnel.service
+    systemctl enable rainovpn.service
     echo -e "${GREEN}✅ Systemd service installed and enabled.${NC}"
   else
-    echo -e "${YELLOW}⚠ Skipping systemd installation.${NC}"
+    echo -e "${YELLOW}⚠ Skipping systemd setup.${NC}"
   fi
 }
 
 run_script() {
-  echo -e "${YELLOW}▶ Running RAINOVPN TUNNEL MANAGER...${NC}\n"
+  echo -e "${YELLOW}▶ Launching RAINOVPN TUNNEL MANAGER...${NC}\n"
   $INSTALL_PATH
 }
 
+# Execute
 banner
 check_root
 install_script
